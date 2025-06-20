@@ -78,5 +78,5 @@ def main_commit_info(): # Renombrada para evitar conflicto con `main` si ya exis
 
 if __name__ == "__main__":
     # Puedes llamar a main_commit_info() si quieres que se ejecute también
-    # main_commit_info()
+    main_commit_info()
     pass # El código principal de pull se ejecuta directamente al inicio del script
