@@ -1,68 +1,54 @@
-
-import git
+from git import Repo
+from git.exc import InvalidGitRepositoryError, GitCommandError
 import os
 
-def git_pull(repo_path, remote_name='origin', branch_name='main'):
-    """
-    Realiza un 'git pull' en un repositorio local.
+# Obtiene la ruta del repositorio local (directorio actual)
+repo_path = os.getcwd()
 
-    Args:
-        repo_path (str): La ruta al directorio del repositorio local.
-        remote_name (str, optional): El nombre del remoto del cual jalar (por defecto es 'origin').
-        branch_name (str, optional): El nombre de la rama a jalar (por defecto es 'main').
-    """
-    try:
-        # Abre el repositorio existente
-        repo = git.Repo(repo_path)
+try:
+    # Abre el repositorio
+    repo = Repo(repo_path)
 
-        # Verifica si el remoto existe
-        if remote_name not in [remote.name for remote in repo.remotes]:
-            print(f"Error: El remoto '{remote_name}' no existe en el repositorio.")
-            return
+    # Asegúrate de que el repositorio no sea un repositorio "bare"
+    # Un repositorio bare no tiene un árbol de trabajo y se usa típicamente como servidor.
+    if not repo.bare:
+        # Intenta obtener las últimas actualizaciones del origen remoto
+        origin = repo.remotes.origin
+        print("Intentando obtener los últimos cambios (pull)...")
+        try:
+            origin.pull()
+            print("Pull completado con éxito.")
+        except GitCommandError as e:
+            print(f"Error durante el pull: {e}")
+            print("Por favor, asegúrate de que tus cambios locales estén commiteados o guardados con 'stash'.")
 
-        # Obtiene el objeto del remoto
-        origin = repo.remotes[remote_name]
-
-        print(f"Realizando git pull en '{repo_path}' desde el remoto '{remote_name}' en la rama '{branch_name}'...")
-
-        # Realiza el pull
-        # El método pull() devuelve una lista de objetos que representan los cambios que se trajeron.
-        # Puedes capturar esta salida si necesitas procesarla.
-        pull_info = origin.pull(branch_name)
-
-        # Imprime información sobre el pull
-        for info in pull_info:
-            print(f"  Referencia actualizada: {info.ref}")
-            print(f"  Estado: {info.flags} (Ver `git.remote.FetchInfo` para más detalles)")
-            if info.note:
-                print(f"  Nota: {info.note}")
-            if info.commit:
-                print(f"  Último commit local después del pull: {info.commit.hexsha}")
+        # Obtiene los commits entre HEAD y el commit anterior (HEAD@{1})
+        # Esto muestra los commits que acaban de llegar a tu rama actual.
+        print("\n--- Commits Recientes ---")
+        try:
+            commits = repo.git.log("HEAD@{1}..HEAD", "--oneline")
+            if commits:
+                print(commits)
             else:
-                print("  No se detectó un nuevo commit específico para esta referencia.")
+                print("No se encontraron nuevos commits entre HEAD@{1} y HEAD.")
+        except GitCommandError as e:
+            print(f"Error al obtener el historial de commits: {e}")
 
-        print("¡Git pull completado exitosamente!")
+        # Obtiene las diferencias (diff) entre HEAD y el commit anterior
+        print("\n--- Diferencias (HEAD@{1} vs HEAD) ---")
+        try:
+            diff = repo.git.diff("HEAD@{1}", "HEAD")
+            if diff:
+                print(diff)
+            else:
+                print("No se encontraron diferencias entre HEAD@{1} y HEAD.")
+        except GitCommandError as e:
+            print(f"Error al obtener las diferencias: {e}")
 
-    except git.InvalidGitRepositoryError:
-        print(f"Error: '{repo_path}' no es un repositorio Git válido.")
-    except Exception as e:
-        print(f"Ocurrió un error al realizar el git pull: {e}")
-
-# --- Ejemplo de uso ---
-if __name__ == "__main__":
-    # Define la ruta a tu repositorio local
-    # ¡Asegúrate de cambiar esto a la ruta real de tu repositorio!
-    # Por ejemplo, si tu repositorio está en 'C:\Users\TuUsuario\MiProyectoGit'
-    # o '/home/tu_usuario/MiProyectoGit'
-    local_repository_path = os.getcwd()
-
-    # Asegúrate de que la ruta exista y sea un repositorio Git
-    if not os.path.exists(local_repository_path):
-        print(f"Error: La ruta '{local_repository_path}' no existe.")
-    elif not os.path.isdir(os.path.join(local_repository_path, '.git')):
-        print(f"Error: La ruta '{local_repository_path}' no parece ser un repositorio Git (no se encontró el directorio .git).")
     else:
-        git_pull(local_repository_path)
+        print(f"La ruta '{repo_path}' es un repositorio Git bare. No se pueden realizar operaciones que requieren un árbol de trabajo.")
 
-        # Ejemplo de pull desde una rama específica (si no es 'main' o 'master')
-        # git_pull(local_repository_path, branch_name='develop')
+except InvalidGitRepositoryError:
+    print(f"Error: La ruta '{repo_path}' no es un repositorio Git válido.")
+except Exception as e:
+    print(f"Ocurrió un error inesperado: {e}")
