@@ -1,40 +1,65 @@
-from git import Repo, InvalidGitRepositoryError
+# modificar el imput no en el mensaje sino 3n su logica s8 rewive un string no vacio cerrar el orogramas
 
-def ver_commits():
-    """
-    Permite al usuario ver los commits de un repositorio Git local.
-    Pregunta cuántos commits desea ver (máximo 10) y muestra
-    los 7 primeros caracteres del hash y la primera línea del comentario de cada commit.
-    """
+
+
+from git import Repo
+import os
+import platform
+
+def mostrar_log_interactivo(repo_path='.'):
     try:
-        # Intenta abrir el repositorio en el directorio actual
-        repo = Repo('.')
-    except InvalidGitRepositoryError:
-        print("Error: No se encontró un repositorio Git en el directorio actual.")
-        print("Asegúrate de ejecutar este script dentro de un repositorio Git.")
-        return
+        repo = Repo(repo_path)
 
-    while True:
-        try:
-            num_commits_str = input("¿Cuántos commits quieres ver? (Máximo 10): ")
-            num_commits = int(num_commits_str)
-            if 1 <= num_commits <= 10:
+        if repo.bare:
+            print("❌ Repositorio bare. No se puede mostrar el log.")
+            return
+
+        commits = list(repo.iter_commits('HEAD'))
+
+        if not commits:
+            print("⚠️ No hay commits en este repositorio.")
+            return
+
+        print("📜 Historial de commits (presiona Enter para continuar, o escribe 'salir' para salir):\n")
+
+        for idx, commit in enumerate(commits):
+            print(f"🔸  Commit {idx+1}:")
+            print(f"Hash: {commit.hexsha[:7]}")
+            print(f"Autor: {commit.author.name} <{commit.author.email}>")
+            print(f"Fecha: {commit.committed_datetime}")
+            print(f"Mensaje: {commit.message.strip()}")
+            print("-")
+ #           clear_console()
+
+            user_input = input(">>>> Enter para continuar, 'salir' para salir: ").strip().lower()
+            if user_input == "salir":
+                print("👋 Saliendo del historial.")
                 break
-            else:
-                print("Por favor, introduce un número entre 1 y 10.")
-        except ValueError:
-            print("Entrada inválida. Por favor, introduce un número.")
 
-    print(f"\nMostrando los últimos {num_commits} commits:")
-    print("---")
+    except Exception as e:
+        print(f"❌ Error: {e}")
 
-    # Itera sobre los commits
-    for i, commit in enumerate(repo.iter_commits('HEAD', max_count=num_commits)):
-        print(f"Hash: {commit.hexsha[:7]}")
-        # Obtiene solo la primera línea del mensaje del commit
-        first_line_comment = commit.message.strip().split('\n')[0]
-        print(f"Comentario: {first_line_comment}")
-        print("---")
+
+
+#def clear_console():
+#    """Clears the console screen."""
+#    if platform.system() == "Windows":
+#        os.system('cls')
+#    else:
+#        # For Linux/macOS
+#        os.system('clear')
+
+# This is your "manual-like" input (still using built-in input for simplicity)
+#user_response = input("➡️ Enter para continuar, 'salir' para salir: ").strip().lower()
+
+# After the user presses Enter, clear the console
+#clear_console()
+
+#if user_response == 'salir':
+#    print("Saliendo del programa.")
+#else:
+#    print("¡Continuando con el programa!")
+#    # Any other output will now appear on a fresh screen
 
 if __name__ == "__main__":
-    ver_commits()
+    mostrar_log_interactivo()
