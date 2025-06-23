@@ -1,5 +1,5 @@
 import os
-from git import Repo, GitCommandError
+from git import Repo, GitCommandError, InvalidGitRepositoryError
 
 def obtener_rama_actual(repo):
     try:
@@ -61,8 +61,10 @@ def mostrar_estado():
         print(archivos_sin_seguimiento(repo))
         print(archivos_en_conflicto(repo))
 
+    except InvalidGitRepositoryError:
+        print("❌ Usted no se encuentra dentro de un repositorio de Git.")
     except Exception as e:
-        print(f"No se pudo acceder al repositorio en {ruta}: {e}")
+        print(f"⚠️ Error inesperado al acceder al repositorio en {ruta}: {e}")
 
 if __name__ == "__main__":
     mostrar_estado()
