@@ -242,10 +242,12 @@ def parse_arguments():
 if __name__ == "__main__":
     # La siguiente línea está comentada para facilitar pruebas directas con 'argumentos'
     # Si quieres usar los argumentos de la línea de comandos, descoméntala.
-    # argumentos = parse_arguments()
+    argumentos = parse_arguments()
 
     # Argumentos de prueba (puedes cambiar esta lista para probar diferentes comandos)
-    argumentos = ['bip39', 'es'] # Ejemplo: ['agregar', 'archivo.txt'], ['fotografiar', 'mi primer commit']
+    #argumentos = ['bip39', 'es'] # Ejemplo: ['agregar', 'archivo.txt'], ['fotografiar', 'mi primer commit']
 
+
+# print para pruevas y testeo 
     print("Lista de argumentos recibidos:", argumentos)
     opciones(argumentos)
