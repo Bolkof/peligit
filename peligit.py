@@ -8,7 +8,7 @@ import inspect
 #from comandos.commit import git_commit_and_print
 #from comandos.ignorados import mostar_archivos_ignorados
 #from comandos.ignorar import agregar_a_gitignorare as ignolar
-from comandos.peso import main as pesar
+from peso import main as pesar
 #from comandos.rasteados import rasteados
 #from comandos.reset import reset
 #from comandos.rm import rm
