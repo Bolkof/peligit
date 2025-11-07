@@ -6,6 +6,52 @@ from comandos.estado import mostrar_estado
 repo = os.environ.get('PWD', os.getcwd())
 if not repo.endswith('/'):
     repo += '/'
+    
+
+def argumento_404():
+    # 1️⃣ Obtener la ruta absoluta del archivo actual
+    ruta_actual = os.path.dirname(os.path.abspath(__file__))
+
+    # 2️⃣ Definir la carpeta "comandos" relativa a donde está este script
+    carpeta = os.path.join(ruta_actual, "comandos")
+
+    # 3️⃣ Verificar si la carpeta existe
+    if not os.path.exists(carpeta):
+        print(f"❌ No se encontró la carpeta: {carpeta}")
+        return
+
+    # 4️⃣ Escanear la carpeta y obtener todos los archivos .py
+    archivos_py = [
+        archivo for archivo in os.listdir(carpeta)
+        if archivo.endswith(".py")
+    ]
+
+    # 5️⃣ Leer el archivo ignorar.txt dentro de la carpeta "comandos"
+    ruta_ignorar = os.path.join(carpeta, "ignorar.txt")
+
+    if not os.path.exists(ruta_ignorar):
+        print(f"⚠️ No se encontró el archivo ignorar.txt en {carpeta}")
+        ignorar = []
+    else:
+        with open(ruta_ignorar, "r", encoding="utf-8") as f:
+            ignorar = [linea.strip() for linea in f if linea.strip()]
+
+    # 6️⃣ Crear una tercera lista con elementos que NO aparecen en ambas listas
+    resultado = list(set(archivos_py) ^ set(ignorar))
+    
+# Eliminar ".py" del final si lo tienen
+    imprimir = [nombre[:-3] if nombre.endswith(".py") else nombre for nombre in resultado]
+
+# 7️⃣ Imprimir la tercera lista en vertical
+  #  print("Archivos únicos en una de las listas:\n")
+    for item in imprimir:
+        print(f'- {item}')
+
+
+# 🧩 Llamada a la función
+#if __name__ == "__main__":
+#    argumento_404()
+
 
 def opciones(args):
     """
@@ -13,6 +59,7 @@ def opciones(args):
     """
     if not args:
         print("¡Hola! Soy Polaroid, tu asistente de Git.")
+        argumento_404()
     elif len(args) == 1 and args[0] == "fotografiar":
         msn = None
         fotografiar(msn)
@@ -23,8 +70,9 @@ def opciones(args):
         mostrar_estado()
     else:
         print("Comando no reconocido. Opciones válidas:")
-        print("- fotografiar [mensaje]")
-        print("- estado")
+        argumento_404()
+   #     print("- fotografiar [mensaje]")
+   #     print("- estado")
 
 # Ejemplo de uso si se ejecuta directamente
 if __name__ == "__main__":
@@ -32,3 +80,6 @@ if __name__ == "__main__":
     import sys
     opciones(sys.argv[1:])
     print(opciones)
+    
+    
+  
