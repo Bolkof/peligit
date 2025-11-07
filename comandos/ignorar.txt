@@ -1,3 +1,4 @@
 CrearProyecto.py
+crear
 fotografiar [mensaje]
 
