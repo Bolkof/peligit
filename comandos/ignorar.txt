@@ -2,3 +2,4 @@ CrearProyecto.py
 fotografiar [mensaje]
 incorporar
 add1.py
+gggg
