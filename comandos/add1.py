@@ -2,6 +2,10 @@ import os
 from git import Repo
 from git.exc import InvalidGitRepositoryError
 
+
+# funcion creada para el comando 'peligit incorporar' sin mas argumentos
+
+
 def interactive_git_add():
     """
     Función interactiva que muestra los archivos modificados y permite
