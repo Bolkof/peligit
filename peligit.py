@@ -2,6 +2,10 @@ import os
 from comandos.polaroid import fotografiar as fotografiar
 from comandos.estado import mostrar_estado
 from comandos.add1 import interactive_git_add
+#from comandos.fuxion import git_merge_interactive()
+
+
+
 
 # Obtiene la ruta desde donde se llamó el comando
 repo = os.environ.get('PWD', os.getcwd())
@@ -47,6 +51,7 @@ def argumento_404():
   #  print("Archivos únicos en una de las listas:\n")
     for item in imprimir:
         print(f'- {item}')
+
 
 
 # 🧩 Llamada a la función
