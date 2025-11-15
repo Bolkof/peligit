@@ -3,6 +3,9 @@ import sys
 from git import Repo, GitCommandError
 from git.exc import InvalidGitRepositoryError, GitError
 
+# comando peligit2 fuxionar
+
+
 def git_merge_robust(branch_name, merge_message=None, strategy=None, abort_on_conflict=True):
     """
     Función robusta para realizar git merge con manejo de errores y opciones avanzadas.

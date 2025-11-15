@@ -4,5 +4,5 @@ fotografiar [mensaje]
 incorporar
 add1.py
 gggg
-funcion
+funcion \n linea de prueva
 funcion.py
