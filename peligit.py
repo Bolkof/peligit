@@ -2,6 +2,7 @@ import os
 from comandos.polaroid import fotografiar as fotografiar
 from comandos.estado import mostrar_estado
 from comandos.add1 import interactive_git_add
+from comandos.jalar import main_commit_info 
 #from comandos.fuxion import git_merge_interactive()
 
 
@@ -74,6 +75,8 @@ def opciones(args):
         fotografiar(msn)
     elif len(args) == 1 and args[0] == "estado":
         mostrar_estado()
+    elif len(args) == 1 and args[0] == "jalar":
+        main_commit_info()
     elif len(args) == 1 and args[0] == "incorporar":
         interactive_git_add()
     else:
