@@ -78,7 +78,7 @@ def opciones(args):
     elif len(args) == 1 and args[0] == "estado":
         mostrar_estado()
     elif len(args) == 1 and args[0] == "empujar":
-        push_repo
+        push_repo()
     elif len(args) == 1 and args[0] == "jalar":
         main_commit_info()
     elif len(args) == 1 and args[0] == "incorporar":
